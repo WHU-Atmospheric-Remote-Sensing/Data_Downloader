@@ -1,0 +1,7 @@
+[radiosonde]
+URL = "http://weather.uwyo.edu/cgi-bin/sounding"
+nc_file_naming = "radiosonde_{sitenum}_{date}.nc"
+URL_station_list = "https://www1.ncdc.noaa.gov/pub/data/igra/igra2-station-list.txt"
+NETCDF_FORMAT = "NETCDF4"
+processor_version = '0.1.0'
+processor_name = "MUA_Data_Center_Bot"

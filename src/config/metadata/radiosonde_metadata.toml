@@ -1,0 +1,146 @@
+# This file contains the variable attributes and global attributes for 
+# radiosonde data.
+#
+# History
+#   2019-09-17. First edition by Zhenping Yin
+
+dimensions = ['altitude', 'nv']
+
+[altitude]
+long_name = "height above sea level"
+standard_name = "altitude"
+units = "m"
+axis = "Y"
+positive = "up"
+dims = ['altitude']
+dtype = 'double'
+
+[pressure]
+_FillValue = 9.96921e+36
+missing_value = 9.96921e+36
+long_name = "air pressure"
+standard_name = "pressure"
+axis = "X"
+units = "hPa"
+dims = ['altitude']
+dtype = 'double'
+
+[temperature]
+_FillValue = 9.96921e+36
+missing_value = 9.96921e+36
+long_name = 'air temperature'
+standard_name = "temperature"
+axis = "X"
+units = "degC"
+dims = ['altitude']
+dtype = 'double'
+
+[dewpoint]
+_FillValue = 9.96921e+36
+missing_value = 9.96921e+36
+long_name = 'dewpoint temperature'
+standard_name = 'dewpoint'
+axis = "X"
+units = "degC"
+dims = ["altitude"]
+dtype = 'double'
+
+[relative_humidity]
+_FillValue = 9.96921e+36
+missing_value = 9.96921e+36
+long_name = 'relative humidity'
+standard_name = 'RH'
+axis = "X"
+units = "%"
+dims = ['altitude']
+dtype = 'double'
+
+[water_vapor_mixing_ratio]
+_FillValue = 9.96921e+36
+missing_value = 9.96921e+36
+long_name = 'water vapor mixing ratio'
+standard_name = 'WVMR'
+axis = "X"
+units = "g*kg-1"
+dims = ['altitude']
+dtype = 'double'
+
+[wind_direction]
+_FillValue = 9.96921e+36
+missing_value = 9.96921e+36
+long_name = 'wind direction'
+standard_name = 'wind dir'
+axis = "X"
+units = "deg"
+dims = ['altitude']
+dtype = 'double'
+
+[wind_speed]
+_FillValue = 9.96921e+36
+missing_value = 9.96921e+36
+long_name = 'wind speed'
+standard_name = 'wind v'
+axis = "X"
+units = "knot"
+dims = ['altitude']
+dtype = 'double'
+
+[theta_a]
+_FillValue = 9.96921e+36
+missing_value = 9.96921e+36
+long_name = 'potential temperature'
+standard_name = 'theta_a'
+axis = "X"
+units = "K"
+dims = ['altitude']
+dtype = 'double'
+
+[theta_e]
+_FillValue = 9.96921e+36
+missing_value = 9.96921e+36
+long_name = 'equivalent potential temperature'
+standard_name = 'theta_e'
+axis = "X"
+units = "K"
+dims = ['altitude']
+dtype = 'double'
+
+[theta_v]
+_FillValue = 9.96921e+36
+missing_value = 9.96921e+36
+long_name = 'virtual potential temperature'
+standard_name = 'theta_v'
+axis = "X"
+units = "K"
+dims = ['altitude']
+dtype = 'double'
+
+[temperature_LCL]
+_FillValue = 9.96921e+36
+missing_value = 9.96921e+36
+long_name = 'temperature of the lifted condensation level'
+standard_name = 'LCL temperature'
+axis = "X"
+units = "K"
+dims = ['nv']
+dtype = 'double'
+
+[pressure_LCL]
+_FillValue = 9.96921e+36
+missing_value = 9.96921e+36
+long_name = 'pressure of the lifted condensation level'
+standard_name = 'LCL pressure'
+axis = "X"
+units = "hPa"
+dims = ['nv']
+dtype = 'double'
+
+[precipitable_water]
+_FillValue = 9.96921e+36
+missing_value = 9.96921e+36
+long_name = 'precipitable water vapor for entire sounding'
+standard_name = 'PWV'
+axis = "X"
+units = "mm"
+dims = ['nv']
+dtype = 'double'

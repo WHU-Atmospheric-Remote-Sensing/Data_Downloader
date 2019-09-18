@@ -1,0 +1,28 @@
+login_credential = 'zhenping'
+
+[admin]
+DATABASE_DRIVER = "mysql"
+DATABASE_USERNAME = ""   # Don't provide root permission, just keep it safe
+DATABASE_PASSWORD = ""   # For security
+DATABASE_NAME = 'mua'
+DATABASE_VERSION = "0.1.0"
+DATABASE_PORT = 3306
+DATABASE_HOST = "127.0.0.1"
+
+[zhenping]   # limited privilege, for inserting and deleting entries
+DATABASE_DRIVER = "mysql"
+DATABASE_USERNAME = "Zhenping"
+DATABASE_PASSWORD = "123456"
+DATABASE_NAME = 'mua'
+DATABASE_VERSION = "0.1.0"
+DATABASE_PORT = 3306
+DATABASE_HOST = "127.0.0.1"
+
+[guest]   # very limited privilege, only for reading entries
+DATABASE_DRIVER = "mysql"
+DATABASE_USERNAME = "guest"
+DATABASE_PASSWORD = "123456"
+DATABASE_NAME = 'mua'
+DATABASE_VERSION = "0.1.0"
+DATABASE_PORT = 3306
+DATABASE_HOST = "127.0.0.1"
