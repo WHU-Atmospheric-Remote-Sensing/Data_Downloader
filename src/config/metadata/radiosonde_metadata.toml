@@ -144,3 +144,10 @@ axis = "X"
 units = "mm"
 dims = ['nv']
 dtype = 'double'
+
+[launch_time]
+long_name = "radiosonde launching time"
+standard_name = "launch_time"
+units = ""
+dims = ['nv']
+dtype = 'double'

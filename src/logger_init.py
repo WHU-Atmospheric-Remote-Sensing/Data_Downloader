@@ -17,27 +17,31 @@ logDir = os.path.join(projectDir, 'log')
 if not os.path.exists(logDir):
     os.mkdir(logDir)
 
+
 def radiosonde_logger_init():
     """
     initialize the logger for processing radiosonde data.
     """
 
-    logFile = os.path.join(projectDir, logger_configs['radiosonde']['LOG_FILE'])
+    rsConfig = logger_configs['radiosonde']
+
+    logFile = os.path.join(
+        projectDir, 'log', rsConfig['LOG_FILE'])
     logger = logging.getLogger(__name__)
-    logger.setLevel(logModeDict[logger_configs['LOG_MODE']])
 
-    logFile = os.path.join(logDir, logger_configs['LOG_FILE'])
     fh = logging.FileHandler(logFile)
-    fh.setLevel(logModeDict[logger_configs['LOG_MODE_FH']])
+    fh.setLevel(logModeDict[rsConfig['LOG_MODE_FH']])
     ch = logging.StreamHandler(sys.stdout)
-    ch.setLevel(logModeDict[logger_configs['LOG_MODE_CH']])
+    ch.setLevel(logModeDict[rsConfig['LOG_MODE_CH']])
 
-    formatterFh = logging.Formatter(logger_configs['FORMATTER_FH'])
-    formatterCh = logging.Formatter(logger_configs['FORMATTER_CH'])
+    formatterFh = logging.Formatter(rsConfig['FORMATTER_FH'])
+    formatterCh = logging.Formatter(rsConfig['FORMATTER_CH'])
     fh.setFormatter(formatterFh)
     ch.setFormatter(formatterCh)
 
     logger.addHandler(fh)
     logger.addHandler(ch)
+
+    logger.setLevel(logModeDict['DEBUG'])
 
     return logger

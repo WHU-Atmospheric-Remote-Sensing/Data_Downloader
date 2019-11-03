@@ -1,9 +1,9 @@
 [radiosonde]
 # _FH -> file handler; _CH -> command line handler
-LOG_MODE_FH = "DEBUG"
+LOG_MODE_FH = "ERROR"
 LOG_MODE_CH = "DEBUG"
 LOG_FILE = "radiosonde.log"
 # formatter for log file
 FORMATTER_FH = '%(asctime)s - %(name)s - %(levelname)s - %(funcName)s - %(lineno)d - %(message)s'
 # formatter for command line
-FORMATTER_CH = '%(asctime)s - %(funcName)s - %(lineno)d - %(message)s'
+FORMATTER_CH = '%(message)s'

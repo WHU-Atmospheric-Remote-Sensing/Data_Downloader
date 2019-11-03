@@ -13,7 +13,7 @@ class RadiosondeDB(object):
     """
 
     def __init__(self):
-
+        
         self.conn = mysql.connector(
             host=DATABASE_CONFIG[USER]['DATABASE_HOST'],
             user=DATABASE_CONFIG[USER]['DATABASE_USERNAME'],

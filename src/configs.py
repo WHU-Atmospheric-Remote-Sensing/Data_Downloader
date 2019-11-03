@@ -1,12 +1,13 @@
 import os
 import toml
 
-CONFIG_DIR = os.path.join(os.path.dirname(os.getcwd()), 'config')
-METADATA_DIR = os.path.join(os.path.dirname(os.getcwd()), 'config', 'metadata')
+CONFIG_DIR = os.path.join(os.path.dirname(__file__), 'config')
+METADATA_DIR = os.path.join(os.path.dirname(__file__), 'config', 'metadata')
 DOWNLOAD_CONFIG_FILE = "download_config.toml"
 DATABASE_CONFIG_FILE = "database_config.toml"
 LOGGER_CONFIG_FILE = "logger_config.toml"
 RADIOSONDE_METADATA_FILE = "radiosonde_metadata.toml"
+
 
 def load_download_config():
     """
