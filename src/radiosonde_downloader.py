@@ -1,4 +1,3 @@
-from io import StringIO
 import os
 import re
 import tempfile
@@ -16,12 +15,28 @@ from logger_init import radiosonde_logger_init
 DOWNLOAD_CONFIG = load_download_config()
 METADATA_CONFIG = load_radiosonde_metadata()
 
+# initialize the logger
 logger = radiosonde_logger_init()
 
 
 def daterange(start_date, end_date):
     """
-    iterate from start_date to end_date.
+    iterate days from start_date to end_date.
+
+    Parameters
+    ----------
+    start_date: datetime obj
+    start date
+    end_date: datetime obj
+    stop date
+
+    Returns
+    -------
+    iterator of days between start_date and end_date
+
+    History
+    -------
+    2019-11-04 First edition by Zhenping
     """
     for n in range(int((end_date - start_date).days)):
         yield start_date + datetime.timedelta(n)
@@ -33,7 +48,12 @@ class RSDownloader(object):
     """
 
     def __init__(self, *args, station_file=None):
+        """
+        initialize the instance.
+        """
+
         self.baseURL = DOWNLOAD_CONFIG['radiosonde']['URL']
+        # information for global radiosonde stations
         self.station_list = self.get_station_names(file=station_file)
 
     def getData(self, start_time, end_time, siteNum=57494):
@@ -52,39 +72,39 @@ class RSDownloader(object):
 
         Returns
         -------
-            rsData: list
-                radiosonde data list. Every element is a dict, which consists
-                of the radiosonde data.
-                {
-                    'pressure'
-                    'altitude'
-                    'temperature'
-                    'dewpoint'
-                    'relative_humidity'
-                    'water_vapor_mixing_ratio'
-                    'wind_direction'
-                    'wind_speed'
-                    'theta_a'
-                    'theta_e'
-                    'theta_v'
-                    'temperature_LCL'
-                    'pressure_LCL'
-                    'precipitable_water'
-                    'launch_time'
-                }
-                Detailed information can be found in [here](http://weather.uwyo.edu/cgi-bin/sounding?region=europe&TYPE=TEXT%3ALIST&YEAR=2019&MONTH=02&FROM=0400&TO=0500&STNM=85934)
-            rsDims: list
-                dimensions of radiosonde data. Every element is a dict, which 
-                consists of the dimensions of the specified radiosonde data.
-            rsGAttrs: list
-                radiosonde metadata.
-                {
-                    'station_name'
-                    'station_number'
-                    'station_latitude'
-                    'station_longitude'
-                    'station_elevation'
-                }
+        rsData: list
+            radiosonde data list. Every element is a dict, which consists
+            of the radiosonde data.
+            {
+                'pressure'
+                'altitude'
+                'temperature'
+                'dewpoint'
+                'relative_humidity'
+                'water_vapor_mixing_ratio'
+                'wind_direction'
+                'wind_speed'
+                'theta_a'
+                'theta_e'
+                'theta_v'
+                'temperature_LCL'
+                'pressure_LCL'
+                'precipitable_water'
+                'launch_time'
+            }
+            Detailed information can be found in [here](http://weather.uwyo.edu/cgi-bin/sounding?region=europe&TYPE=TEXT%3ALIST&YEAR=2019&MONTH=02&FROM=0400&TO=0500&STNM=85934)
+        rsDims: list
+            dimensions of radiosonde data. Every element is a dict, which
+            consists of the dimensions of the specified radiosonde data.
+        rsGAttrs: list
+            radiosonde metadata.
+            {
+                'station_name'
+                'station_number'
+                'station_latitude'
+                'station_longitude'
+                'station_elevation'
+            }
         """
 
         if start_time > end_time:
@@ -106,7 +126,7 @@ class RSDownloader(object):
                 thisDate,
                 endDate,
                 siteNum
-                )
+            )
 
             iterators = zip(dataList, dimsList, gAttrsList)
             for thisData, thisDims, thisGAttrs in iterators:
@@ -148,7 +168,7 @@ class RSDownloader(object):
             soup = BeautifulSoup(html, 'lxml')
         except Exception as e:
             errMsg = 'Error in parsing the html for ' + \
-                        'retrieving radiosonde data!'
+                'retrieving radiosonde data!'
             logger.error(errMsg)
             raise e
 
@@ -185,9 +205,9 @@ class RSDownloader(object):
                 np.float, np.float, np.float, np.float,
                 np.float, np.float, np.float, np.float,
                 np.float, np.float, np.float
-                ]
+            ]
             dataType = np.dtype([(col_names[iCol], col_types[iCol])
-                                for iCol, iType in enumerate(col_types)])
+                                 for iCol, iType in enumerate(col_types)])
             data = np.empty(len(dataLines), dtype=dataType)
 
             def str_2_double(inputStr):
@@ -256,12 +276,12 @@ class RSDownloader(object):
                 'precipitable_water': metadataDict['PWV'],
                 'launch_time': datetime.datetime.strptime(
                     metadataDict['launch_time'], '%y%m%d/%H%M'
-                    )
+                )
             }
             gAttris = {
                 'station_name': self.search_station_name(
                     metadataDict['station_number']
-                    ),
+                ),
                 'station_number': metadataDict['station_number'],
                 'station_latitude': metadataDict['station_latitude'],
                 'station_longitude': metadataDict['station_longitude'],
@@ -369,19 +389,22 @@ class RSDownloader(object):
                 ),
             'temperature_LCL':
                 (
-                    r'(?<=Temp [K] of the Lifted Condensation Level: )\d+\.?\d+',
+                    r'(?<=Temp [K] of the Lifted Condensation ' +
+                    r'Level: )\d+\.?\d+',
                     float,
                     0.0
                 ),
             'pressure_LCL':
                 (
-                    r'(?<=Pres [hPa] of the Lifted Condensation Level: )\d+\.?\d+',
+                    r'(?<=Pres [hPa] of the Lifted ' +
+                    r'Condensation Level: )\d+\.?\d+',
                     float,
                     0.0
                 ),
             'PWV':
                 (
-                    r'(?<=Precipitable water [mm] for entire sounding: )\d+\.?\d+',
+                    r'(?<=Precipitable water [mm] ' +
+                    r'for entire sounding: )\d+\.?\d+',
                     float,
                     0.0
                 )
@@ -407,6 +430,53 @@ class RSDownloader(object):
                     force=False):
         """
         Save radiosonde data to netCDF file.
+
+        Parameters
+        ----------
+        rsData: list
+            radiosonde data list. Every element is a dict, which consists
+            of the radiosonde data.
+            {
+                'pressure'
+                'altitude'
+                'temperature'
+                'dewpoint'
+                'relative_humidity'
+                'water_vapor_mixing_ratio'
+                'wind_direction'
+                'wind_speed'
+                'theta_a'
+                'theta_e'
+                'theta_v'
+                'temperature_LCL'
+                'pressure_LCL'
+                'precipitable_water'
+                'launch_time'
+            }
+            Detailed information can be found in [here](http://weather.uwyo.edu/cgi-bin/sounding?region=europe&TYPE=TEXT%3ALIST&YEAR=2019&MONTH=02&FROM=0400&TO=0500&STNM=85934)
+        rsDims: list
+            dimensions of radiosonde data. Every element is a dict, which
+            consists of the dimensions of the specified radiosonde data.
+        rsGlobalAttrs: list
+            radiosonde metadata.
+            {
+                'station_name'
+                'station_number'
+                'station_latitude'
+                'station_longitude'
+                'station_elevation'
+            }
+        output_dir: str
+        output directory for saving the netCDF files.
+
+        Keywords
+        --------
+        force: boolean
+        flag to control whether overwrite the netCDF file if it exists.
+
+        History
+        -------
+        2019-11-04 First edition by Zhenping
         """
 
         if (not rsData) or (not rsDims) or (not rsGlobalAttrs):
@@ -431,13 +501,13 @@ class RSDownloader(object):
            (os.path.isfile(output_filepath)) and (not force):
             logger.warning(
                 '{file} exists. Jump over'.format(file=output_filepath)
-                )
+            )
             return
         elif (os.path.exists(output_filepath)) and \
              (os.path.isfile(output_filepath)) and force:
             logger.warning('{file} exists. Overwrite it!'.format(
-                 file=output_filepath
-             ))
+                file=output_filepath
+            ))
 
         netCDF_format = DOWNLOAD_CONFIG['radiosonde']['NETCDF_FORMAT']
         dataset = Dataset(output_filepath, 'w',
@@ -507,6 +577,8 @@ class RSDownloader(object):
 
         dataset.close()
 
+        return output_filepath
+
     def read_station_list(self, file):
         """
         read the list of station information from file.
@@ -533,7 +605,7 @@ class RSDownloader(object):
                         'lat': float(line[12:20]),
                         'lon': float(line[21:30]),
                         'elevation': float(line[31:37]),
-                        'station_name': line[41:71]
+                        'station_name': line[41:71].strip()
                     })
                 except Exception as e:
                     logger.warning(e)
@@ -549,12 +621,12 @@ class RSDownloader(object):
                     format(ID='ID', name='name', lat='lat', lon='lon'))
         for item in self.station_list:
             logger.info('{ID:6} {name:30} {lat:8.4} {lon:9.4}'.format(
-                            ID=item['ID'],
-                            name=item['station_name'],
-                            lat=item['lat'],
-                            lon=item['lon']
-                            )
-                        )
+                ID=item['ID'],
+                name=item['station_name'],
+                lat=item['lat'],
+                lon=item['lon']
+            )
+            )
 
     def get_station_names(self, file=None):
         """
@@ -612,28 +684,3 @@ class RSDownloader(object):
             fh.write(res.content.decode('utf-8'))
 
         logger.info('Saved station list to {file}'.format(file=file))
-
-
-def main():
-    # print('------------------------------------------------------------------')
-    # print("Test on GetRSData: data = GetRSData('2014', '05', '08', '00', siteNum='57494')")
-    # data = GetRSData('2014', '05', '08', '00', siteNum='57494', file='/Users/yinzhenping/Desktop/temp.h5')
-    # print(data)
-    rs = RSDownloader(station_file='/var/folders/_g/p9xv1xwd259dx74b5xkrj94h0000gn/T/tmpik4ngm5p/station_list')
-    # rs.list_station_number()
-    # rs.search_station_name(57494)
-
-    startTime = datetime.datetime(2018, 12, 1)
-    stopTime = datetime.datetime(2018, 12, 2)
-    # rs.get_daily_data(startTime, stopTime)
-
-    rsData, rsDims, rsGAttrs = rs.getData(startTime, stopTime)
-    iterators = zip(rsData, rsDims, rsGAttrs)
-    for thisData, thisDims, thisGAttrs in iterators:
-        rs.save_netCDF(thisData, thisDims, thisGAttrs, '/Users/yinzhenping/Desktop/Data_Downloader/tmp/', force=True)
-
-
-
-
-if __name__ == '__main__':
-    main()
