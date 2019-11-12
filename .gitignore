@@ -1,3 +1,6 @@
 # src/config/
 others/
 log/
+.vscode/
+tmp/
+test/__pycache__/
