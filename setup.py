@@ -14,7 +14,6 @@ def main():
 
     startTime = datetime.datetime(2019, 1, 1)
     stopTime = datetime.datetime(2019, 2, 1)
-    # rs.get_daily_data(startTime, stopTime)
 
     rsData, rsDims, rsGAttrs = rs.getData(startTime, stopTime, siteNum=57494)
     iterators = zip(rsData, rsDims, rsGAttrs)
