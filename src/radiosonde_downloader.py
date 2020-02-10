@@ -18,6 +18,9 @@ METADATA_CONFIG = load_radiosonde_metadata()
 # initialize the logger
 logger = radiosonde_logger_init()
 
+PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+STATION_FILE_NAME = 'radiosonde_station_list.txt'
+
 
 def daterange(start_date, end_date):
     """
@@ -54,7 +57,10 @@ class RSDownloader(object):
 
         self.baseURL = DOWNLOAD_CONFIG['radiosonde']['URL']
         # information for global radiosonde stations
-        self.station_list = self.get_station_names(file=station_file)
+        self.station_list_file = os.path.join(
+            PROJECT_DIR, 'includes', STATION_FILE_NAME
+        )
+        self.station_list = self.get_station_names(self.station_list_file)
 
     def getData(self, start_time, end_time, siteNum=57494):
         """
@@ -92,7 +98,6 @@ class RSDownloader(object):
                 'precipitable_water'
                 'launch_time'
             }
-            Detailed information can be found in [here](http://weather.uwyo.edu/cgi-bin/sounding?region=europe&TYPE=TEXT%3ALIST&YEAR=2019&MONTH=02&FROM=0400&TO=0500&STNM=85934)
         rsDims: list
             dimensions of radiosonde data. Every element is a dict, which
             consists of the dimensions of the specified radiosonde data.
@@ -157,7 +162,7 @@ class RSDownloader(object):
 
         try:
             # retrieve the html text
-            html = requests.get(reqURL).text
+            html = requests.get(reqURL, timeout=15).text
         except RuntimeError as e:
             logger.error('Error in retrieving content from {url}'.
                          format(url=reqURL))
@@ -453,7 +458,6 @@ class RSDownloader(object):
                 'precipitable_water'
                 'launch_time'
             }
-            Detailed information can be found in [here](http://weather.uwyo.edu/cgi-bin/sounding?region=europe&TYPE=TEXT%3ALIST&YEAR=2019&MONTH=02&FROM=0400&TO=0500&STNM=85934)
         rsDims: list
             dimensions of radiosonde data. Every element is a dict, which
             consists of the dimensions of the specified radiosonde data.
@@ -628,23 +632,27 @@ class RSDownloader(object):
             )
             )
 
+    def update_station_names(self, file):
+        """
+        Update the station names.
+        """
+
+        self.download_station_list(file)
+
     def get_station_names(self, file=None):
         """
         Get the list of radiosonde station names.
         """
 
-        if file is None:
-            station_list_file = os.path.join(tempfile.mkdtemp(),
-                                             'station_list')
-            self.download_station_list(station_list_file)
-            station_list = self.read_station_list(station_list_file)
-            os.remove(station_list_file)
-        else:
+        if file is not None:
             if (not os.path.exists(file)) or (not os.path.isfile(file)):
                 logger.error('{file} does not exist.'.format(file=file))
-                raise FileNotFoundError
+                self.update_station_names(file)
+                station_list = self.read_station_list(file)
             else:
                 station_list = self.read_station_list(file)
+        else:
+            raise FileExistsError
 
         return station_list
 

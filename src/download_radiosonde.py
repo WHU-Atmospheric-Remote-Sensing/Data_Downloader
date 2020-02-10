@@ -2,12 +2,7 @@ import sys
 import os
 import datetime
 import argparse
-
-testPath = os.path.dirname(__file__)
-srcPath = os.path.join(testPath, 'src')
-sys.path.append(srcPath)
-
-from src.radiosonde_downloader import RSDownloader
+from radiosonde_downloader import RSDownloader
 
 
 parser = argparse.ArgumentParser()
@@ -20,7 +15,7 @@ args = parser.parse_args()
 if args.output_dir is None:
     args.output_dir = 'D:\\Data\\Radiosonde\\wuhan'
 
-rs = RSDownloader(station_file='C:\\Users\\zpyin\\Desktop\\Data_Downloader\\doc\\station_list')
+rs = RSDownloader()
 
 startTime = datetime.datetime.strptime(args.start, '%Y%m%d')
 stopTime = datetime.datetime.strptime(args.stop, '%Y%m%d')
