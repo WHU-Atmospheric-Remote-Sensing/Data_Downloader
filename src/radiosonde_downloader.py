@@ -163,7 +163,7 @@ class RSDownloader(object):
         try:
             # retrieve the html text
             html = requests.get(reqURL, timeout=15).text
-        except RuntimeError as e:
+        except Exception as e:
             logger.error('Error in retrieving content from {url}'.
                          format(url=reqURL))
             raise e
@@ -684,7 +684,7 @@ class RSDownloader(object):
                     format(url=reqURL))
 
         try:
-            res = requests.get(reqURL)
+            res = requests.get(reqURL, timeout=5)
         except Exception as e:
             logger.error('Error in connecting {url}'.format(url=reqURL))
 
