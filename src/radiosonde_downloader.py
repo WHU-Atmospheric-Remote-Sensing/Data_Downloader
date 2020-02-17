@@ -151,6 +151,11 @@ class RSDownloader(object):
                          'over one day.')
             raise ValueError
 
+        logger.info('Download Radiosonde data for {0:d} at {1:s}:00'.format(
+            siteNum,
+            start_time.strftime('%Y-%m-%d %H')
+        ))
+
         # build the request url
         reqURL = self.baseURL + \
             "?region=naconf&TYPE=TEXT%3ALIST&" + \
@@ -663,11 +668,7 @@ class RSDownloader(object):
 
         for item in self.station_list:
             if item['ID'] == station_number:
-                logger.info('{number}->{name}'.format(
-                    number=station_number,
-                    name=item['station_name']
-                ))
-
+                # found the station_name then return
                 return item['station_name']
 
         logger.warning('No items was found based on the station ' +

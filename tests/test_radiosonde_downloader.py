@@ -1,14 +1,17 @@
 import sys
 import os
+import shutil
+import unittest
+from datetime import datetime
 
-testPath = os.path.dirname(__file__)
-srcPath = os.path.join(os.path.dirname(testPath), 'src')
+projectDir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+print(projectDir)
+testPath = os.path.join(projectDir, 'tests')
+srcPath = os.path.join(projectDir, 'src')
 
 sys.path.append(srcPath)
 
 from radiosonde_downloader import RSDownloader
-import unittest
-from datetime import datetime
 
 
 class Test(unittest.TestCase):
@@ -78,7 +81,8 @@ class Test(unittest.TestCase):
 
             flagTest = True
 
-        except expression as e:
+        except Exception as e:
+            self.assertRaises(e)
             flagTest = False
 
         self.assertTrue(flagTest)
@@ -97,10 +101,17 @@ class Test(unittest.TestCase):
 
         iterators = zip(rsData, rsDims, rsGAttrs)
         for thisData, thisDims, thisGAttrs in iterators:
+            tmpFolder = os.path.join(projectDir, 'tmp')
+
+            if not os.path.exists(tmpFolder):
+                os.mkdir(tmpFolder)
+
             rsFile = rs.save_netCDF(
-                thisData, thisDims, thisGAttrs,
-                os.path.join(os.path.dirname(testPath), 'tmp'), force=True)
+                thisData, thisDims, thisGAttrs, tmpFolder, force=True)
+
             self.assertTrue(os.path.exists(rsFile))
+
+        shutil.rmtree(tmpFolder, ignore_errors=True)
 
 
 def main():
