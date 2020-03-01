@@ -5,3 +5,14 @@ URL_station_list = "https://www1.ncdc.noaa.gov/pub/data/igra/igra2-station-list.
 NETCDF_FORMAT = "NETCDF4"
 processor_version = '0.1.0'
 processor_name = "MUA_Data_Center_Bot"
+
+[ECMWF]
+ecmwfapirc = """
+{
+    "url"   : "https://api.ecmwf.int/v1",
+    "key"   : "6bd116ec107d9f61684d98203a500c3b",
+    "email" : "zhenping@tropos.de"
+}
+"""
+DATA_DIR = '/root/data/ECMWF'
+BDY_DIR = '/ECMWF'

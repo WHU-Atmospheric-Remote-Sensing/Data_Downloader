@@ -1,0 +1,1 @@
+# Himawari-8 cloud products can be accessed at https://clouds.larc.nasa.gov/prod/
